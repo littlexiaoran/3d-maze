@@ -409,7 +409,7 @@ function handleInput(dt) {
   let turn = 0;
   if (keysDown['KeyA'] || keysDown['ArrowLeft']) turn += 1;
   if (keysDown['KeyD'] || keysDown['ArrowRight']) turn -= 1;
-  turn += joyX;
+  turn -= joyX; // 拖右 = 右转（与键盘 D 一致）
   turn = Math.max(-1, Math.min(1, turn));
   if (turn !== 0) angle += turn * TURN_SPEED * dt;
   let f = 0;

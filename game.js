@@ -110,6 +110,8 @@ const mapOverlay = document.getElementById('mapOverlay');
 const mapCanvas = document.getElementById('mapCanvas');
 const banner = document.getElementById('banner');
 const toast = document.getElementById('toast');
+const joyBase = document.getElementById('joyBase');
+const joyKnob = document.getElementById('joyKnob');
 const mctx = mapCanvas.getContext('2d');
 
 /* ================= 状态 ================= */
@@ -336,6 +338,41 @@ window.addEventListener('keydown', e => {
 });
 window.addEventListener('keyup', e => { keysDown[e.code] = false; });
 
+/* ================= 触屏控制杆 ================= */
+const JOY_R = 48;      // 摇杆头最大拖动半径（像素）
+const JOY_DEAD = 0.15; // 死区：小于此幅度视为不动
+let joyId = null, joyOX = 0, joyOY = 0, joyX = 0, joyY = 0;
+
+function joyHide() {
+  joyId = null; joyX = 0; joyY = 0;
+  joyBase.classList.add('hidden');
+}
+
+canvas.addEventListener('pointerdown', e => {
+  if (e.pointerType === 'mouse' || joyId !== null) return;
+  joyId = e.pointerId;
+  joyOX = e.clientX; joyOY = e.clientY;
+  joyBase.style.left = joyOX + 'px';
+  joyBase.style.top = joyOY + 'px';
+  joyBase.classList.remove('hidden');
+  joyKnob.style.transform = 'translate(0px, 0px)';
+  canvas.setPointerCapture(e.pointerId);
+  e.preventDefault();
+});
+
+canvas.addEventListener('pointermove', e => {
+  if (e.pointerId !== joyId) return;
+  let dx = e.clientX - joyOX, dy = e.clientY - joyOY;
+  const d = Math.hypot(dx, dy);
+  if (d > JOY_R) { dx = dx / d * JOY_R; dy = dy / d * JOY_R; }
+  joyKnob.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+  if (d < JOY_R * JOY_DEAD) { joyX = 0; joyY = 0; }
+  else { joyX = dx / JOY_R; joyY = dy / JOY_R; }
+});
+
+canvas.addEventListener('pointerup', e => { if (e.pointerId === joyId) joyHide(); });
+canvas.addEventListener('pointercancel', e => { if (e.pointerId === joyId) joyHide(); });
+
 function circleHit(x, y) {
   const x1 = Math.floor((x - PLAYER_R) / CELL), x2 = Math.floor((x + PLAYER_R) / CELL);
   const y1 = Math.floor((y - PLAYER_R) / CELL), y2 = Math.floor((y + PLAYER_R) / CELL);
@@ -369,11 +406,17 @@ function onDoorTouch() {
 
 function handleInput(dt) {
   if (locked) return;
-  if (keysDown['KeyA'] || keysDown['ArrowLeft']) angle += TURN_SPEED * dt;
-  if (keysDown['KeyD'] || keysDown['ArrowRight']) angle -= TURN_SPEED * dt;
+  let turn = 0;
+  if (keysDown['KeyA'] || keysDown['ArrowLeft']) turn += 1;
+  if (keysDown['KeyD'] || keysDown['ArrowRight']) turn -= 1;
+  turn += joyX;
+  turn = Math.max(-1, Math.min(1, turn));
+  if (turn !== 0) angle += turn * TURN_SPEED * dt;
   let f = 0;
   if (keysDown['KeyW'] || keysDown['ArrowUp']) f += 1;
   if (keysDown['KeyS'] || keysDown['ArrowDown']) f -= 1;
+  f -= joyY; // 屏幕向上拖 = 前进
+  f = Math.max(-1, Math.min(1, f));
   if (f !== 0) {
     const fx = -Math.sin(angle), fy = -Math.cos(angle);
     moveAxis(fx * MOVE_SPEED * CELL * f * dt, 0);

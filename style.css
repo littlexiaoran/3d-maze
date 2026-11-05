@@ -1,0 +1,106 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #151920;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#game { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(20, 24, 32, 0.82);
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 16px;
+  backdrop-filter: blur(4px);
+}
+button:hover { background: rgba(45, 55, 75, 0.9); }
+
+.hidden { display: none !important; }
+
+/* 左上角：关卡 */
+#levelBtn { position: fixed; top: 16px; left: 16px; z-index: 20; }
+#levelPanel {
+  position: fixed; top: 66px; left: 16px; z-index: 20;
+  display: flex; gap: 8px;
+  background: rgba(20, 24, 32, 0.88);
+  padding: 10px; border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+#levelPanel button { width: 44px; height: 44px; padding: 0; font-size: 18px; border-radius: 8px; }
+#levelPanel button.active { background: #3d6fe0; border-color: #3d6fe0; }
+
+/* 右上角：地图 */
+#mapBtn { position: fixed; top: 16px; right: 16px; z-index: 20; min-width: 96px; }
+#mapBtn.cooldown { opacity: 0.55; cursor: not-allowed; }
+
+/* 右下角：帮助 */
+#helpBtn { position: fixed; bottom: 16px; right: 16px; z-index: 20; }
+#helpPanel {
+  position: fixed; bottom: 66px; right: 16px; z-index: 20;
+  width: 290px;
+  background: rgba(20, 24, 32, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  padding: 16px;
+  color: #e8ebf2; font-size: 14px; line-height: 1.8;
+}
+#helpPanel h3 { margin: 6px 0; font-size: 16px; color: #ffd24a; }
+#helpPanel h3:first-child { margin-top: 0; }
+#helpPanel b { color: #ffd24a; }
+
+/* 左下角：钥匙状态（不可点击） */
+#keyStatus {
+  position: fixed; bottom: 16px; left: 16px; z-index: 20;
+  padding: 10px 16px; border-radius: 10px; font-size: 16px;
+  background: rgba(20, 24, 32, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffb3b3;
+  pointer-events: none;
+}
+#keyStatus.got { color: #7dff9e; border-color: #35c24a; }
+
+/* 俯视地图 */
+#mapOverlay {
+  position: fixed; inset: 0; z-index: 40;
+  background: rgba(8, 10, 14, 0.72);
+  display: flex; align-items: center; justify-content: center;
+}
+#mapCanvas {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #10131a;
+}
+
+/* 中央横幅 */
+#banner {
+  position: fixed; top: 38%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 50;
+  font-size: 44px; font-weight: 700; color: #ffd24a;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.8);
+  background: rgba(15, 18, 25, 0.85);
+  padding: 22px 44px; border-radius: 16px;
+  border: 1px solid rgba(255, 210, 74, 0.5);
+  white-space: nowrap;
+}
+
+/* 顶部提示 */
+#toast {
+  position: fixed; top: 80px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  font-size: 17px; color: #fff;
+  background: rgba(15, 18, 25, 0.85);
+  padding: 10px 22px; border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  white-space: nowrap;
+}

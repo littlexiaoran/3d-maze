@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D迷宫3</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<button id="levelBtn">关卡</button>
+<div id="levelPanel" class="hidden">
+  <button data-level="1">1</button>
+  <button data-level="2">2</button>
+  <button data-level="3">3</button>
+  <button data-level="4">4</button>
+  <button data-level="5">5</button>
+</div>
+
+<button id="mapBtn">地图</button>
+<button id="helpBtn">帮助</button>
+
+<div id="helpPanel" class="hidden">
+  <h3>操作说明</h3>
+  <p><b>W / ↑</b>：前进　　<b>S / ↓</b>：后退</p>
+  <p><b>A / ←</b>：左转　　<b>D / →</b>：右转</p>
+  <h3>玩法</h3>
+  <p>先找到<b>黄色钥匙</b>，门会由红色变为绿色；再走到绿门即可过关。</p>
+  <p>共 5 关。左上角「关卡」可跳关；右上角「地图」显示 5 秒后自动关闭，冷却 20 秒才能再次使用。</p>
+</div>
+
+<div id="keyStatus">钥匙：未拿到</div>
+
+<div id="mapOverlay" class="hidden"><canvas id="mapCanvas"></canvas></div>
+<div id="banner" class="hidden"></div>
+<div id="toast" class="hidden"></div>
+
+<script src="three.min.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

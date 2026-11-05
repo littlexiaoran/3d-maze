@@ -127,3 +127,66 @@ button:hover { background: rgba(45, 55, 75, 0.9); }
   border: 1px solid rgba(255, 255, 255, 0.25);
   white-space: nowrap;
 }
+
+/* 加载动画 */
+#loading {
+  position: fixed; inset: 0; z-index: 100;
+  background: #151920;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 24px;
+  transition: opacity 0.45s ease;
+}
+#loading.done { opacity: 0; pointer-events: none; }
+
+#maze {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 30px);
+  grid-auto-rows: 30px;
+  gap: 2px;
+}
+#maze .wall {
+  background: #5b6b96;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+#maze .path {
+  background: #222834;
+  border-radius: 3px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
+}
+/* 单元格 30px + 间距 2px，方块位移步长 32px */
+#mazeSquare {
+  position: absolute; left: 6px; top: 6px;
+  width: 18px; height: 18px;
+  border-radius: 4px;
+  background: #ffd24a;
+  box-shadow: 0 0 12px rgba(255, 210, 74, 0.65);
+  animation: mazeEnter 0.8s ease-out forwards,
+             mazeLoop 4s linear 0.8s infinite;
+}
+@keyframes mazeEnter {
+  from { transform: translate(32px, 0); }
+  to   { transform: translate(32px, 32px); }
+}
+@keyframes mazeLoop {
+  0%    { transform: translate(32px, 32px); }
+  12.5% { transform: translate(64px, 32px); }
+  25%   { transform: translate(96px, 32px); }
+  37.5% { transform: translate(96px, 64px); }
+  50%   { transform: translate(96px, 96px); }
+  62.5% { transform: translate(64px, 96px); }
+  75%   { transform: translate(32px, 96px); }
+  87.5% { transform: translate(32px, 64px); }
+  100%  { transform: translate(32px, 32px); }
+}
+
+#loadingText {
+  color: #8a93a8; font-size: 15px; letter-spacing: 2px;
+  animation: loadPulse 1.6s ease-in-out infinite;
+}
+@keyframes loadPulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}

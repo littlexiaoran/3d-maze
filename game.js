@@ -112,6 +112,7 @@ const banner = document.getElementById('banner');
 const toast = document.getElementById('toast');
 const joyBase = document.getElementById('joyBase');
 const joyKnob = document.getElementById('joyKnob');
+const loading = document.getElementById('loading');
 const mctx = mapCanvas.getContext('2d');
 
 /* ================= 状态 ================= */
@@ -122,6 +123,9 @@ let hasKey = false, locked = false;
 let px = 0, py = 0, angle = 0;
 let mapOpen = false, mapCooldownUntil = 0, mapCloseTimer = 0;
 let hintCooldownUntil = 0, toastTimer = 0;
+let loadingHidden = false;
+const loadStart = performance.now();
+const LOADING_MIN_MS = 700; // 加载动画最短展示时长，避免一闪而过
 const keysDown = Object.create(null);
 
 /* ================= Three 基础 ================= */
@@ -590,6 +594,12 @@ function loop(now) {
   camera.position.set(px, EYE, py);
   camera.rotation.y = angle;
   renderer.render(scene, camera);
+
+  if (!loadingHidden && loading && performance.now() - loadStart >= LOADING_MIN_MS) {
+    loadingHidden = true;
+    loading.classList.add('done');
+    setTimeout(() => loading.remove(), 500);
+  }
 }
 
 /* ================= 调试钩子 ================= */
